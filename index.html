@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AlphaFamily Pro - Учим Буквы и Цифры</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+    <meta name="description" content="Профессиональная образовательная игра для детей. Учим буквы, цифры, слова!">
+    <meta name="theme-color" content="#6366F1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="logo-circle">
+                    <span class="logo-text">ABC</span>
+                </div>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p class="loading-text">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti"></canvas>
+
+    <!-- Particles Container -->
+    <div id="particles"></div>
+
+    <!-- Mute Button (Corner) -->
+    <button class="lang-btn" style="top: 20px; right: 20px;" onclick="app.toggleMute()" aria-label="Toggle Sound">
+        <span class="lang-flag" id="mute-icon">🔊</span>
+    </button>
+
+    <!-- 1. LANGUAGE SELECTION -->
+    <div id="view-language" class="screen center-content">
+        <div class="menu-container">
+            <div class="menu-header">
+                <h1 class="game-title">
+                    <span class="title-gradient">Alpha</span><span class="title-accent">Family</span>
+                </h1>
+                <p class="game-subtitle" id="lbl-select-lang">Select Language</p>
+            </div>
+            <div class="lang-grid">
+                <button class="lang-card" onclick="app.setLang('ru'); app.go('view-roles')">
+                    <span class="lang-flag-large">🇷🇺</span>
+                    <span class="lang-name">Русский</span>
+                </button>
+                <button class="lang-card" onclick="app.setLang('en'); app.go('view-roles')">
+                    <span class="lang-flag-large">🇺🇸</span>
+                    <span class="lang-name">English</span>
+                </button>
+                <button class="lang-card" onclick="app.setLang('he'); app.go('view-roles')">
+                    <span class="lang-flag-large">🇮🇱</span>
+                    <span class="lang-name">עברית</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN MENU (ROLES) -->
+    <div id="view-roles" class="screen center-content hidden">
+        <div class="header-controls">
+            <button class="icon-btn" onclick="app.go('view-language')">🌐</button>
+        </div>
+        <div class="menu-container">
+            <div class="menu-header">
+                <h1 class="game-title">
+                    <span class="title-gradient">Alpha</span><span class="title-accent">Family</span>
+                </h1>
+                <p class="game-subtitle" id="lbl-subtitle">Учим буквы и цифры весело!</p>
+            </div>
+
+            <div class="menu-cards">
+                <button class="role-card junior-card" onclick="app.setProfile('junior')">
+                    <div class="card-glow junior-glow"></div>
+                    <div class="role-icon-wrapper">
+                        <span class="role-icon">👶</span>
+                        <div class="icon-particles"></div>
+                    </div>
+                    <div class="role-content">
+                        <h2 class="role-title" id="lbl-jun-title">Малыши</h2>
+                        <p class="role-desc" id="lbl-jun-desc">до 6 лет</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </button>
+
+                <button class="role-card senior-card" onclick="app.setProfile('senior')">
+                    <div class="card-glow senior-glow"></div>
+                    <div class="role-icon-wrapper">
+                        <span class="role-icon">🚀</span>
+                        <div class="icon-particles"></div>
+                    </div>
+                    <div class="role-content">
+                        <h2 class="role-title" id="lbl-sen-title">Старшие</h2>
+                        <p class="role-desc" id="lbl-sen-desc">до 10 лет</p>
+                    </div>
+                    <div class="card-shine"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. SENIOR MENU (Subject Selection) -->
+    <div id="view-senior-menu" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-roles')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="submenu-container">
+            <h2 class="section-title" id="lbl-select-subj">Select Subject</h2>
+            <div class="subject-grid">
+                <!-- Letters -->
+                <button class="subject-btn letters-btn" onclick="app.startSubject('letters')">
+                    <span class="btn-icon">🅰️</span>
+                    <span id="lbl-letters">Letters</span>
+                </button>
+                <!-- Math -->
+                <button class="subject-btn math-btn" onclick="app.goToMathMenu()">
+                    <span class="btn-icon">🔢</span>
+                    <span id="lbl-math">Math</span>
+                </button>
+                <!-- Syllables -->
+                <button class="subject-btn" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #004d40;" onclick="app.goToSyllableMenu()">
+                    <span class="btn-icon">🗣️</span>
+                    <span id="lbl-syllables">Syllables</span>
+                </button>
+                 <!-- Philwords -->
+                 <button class="subject-btn" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: white;" onclick="app.showPhilwordMenu()">
+                    <span class="btn-icon">🧩</span>
+                    <span>Philwords</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. LEVEL MAP (Letters/Numbers) -->
+    <div id="view-map" class="screen hidden">
+        <button class="btn-home" onclick="app.goBackFromMap()" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="map-container-wrapper">
+            <div class="map-header">
+                <h2 class="section-title animated-title">
+                    <span class="title-icon">🗺️</span>
+                    <span id="lbl-map">Level Map</span>
+                </h2>
+                <div class="map-actions">
+                    <button class="action-btn dict-btn" onclick="app.showDictionary()">
+                        <span class="btn-icon">📖</span>
+                        <span id="lbl-dict">Dictionary</span>
+                    </button>
+                </div>
+            </div>
+            <div class="level-path" id="map-container"></div>
+        </div>
+    </div>
+
+    <!-- 5. MATH GAME (Standard Arithmetic & Counting) -->
+    <div id="view-math-game" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.goBackFromMap()" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="math-game-container">
+            <div class="math-header">
+                <div>Level: <span id="math-level">1</span></div>
+                <div>Score: <span id="math-score">0</span></div>
+            </div>
+            <div class="math-problem-area">
+                <div class="math-visual-items" id="math-visual-items"></div>
+                <div class="math-equation" id="math-equation"></div>
+            </div>
+            <div class="math-options-grid" id="math-options"></div>
+            
+            <div style="text-align:center; margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.3)">
+                <button class="action-btn" onclick="MathGame.startSpaceMode('mult')" style="background: #2c3e50; color: white;">
+                    🚀 Space Mission
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. SPACE MATH GAME -->
+    <div id="view-math-space" class="screen hidden">
+        <button class="btn-home" onclick="MathGame.stopSpaceMode(); app.go('view-math-game')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="space-game" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+            <div class="space-canvas" id="space-canvas"></div>
+            <div class="space-controls" style="padding: 10px; background: #eee;">
+                <div class="space-input" id="space-input" style="font-size: 2rem; text-align: center; height: 50px; background: white; margin-bottom: 10px; border-radius: 10px; display:flex; align-items:center; justify-content:center;"></div>
+                <div class="numpad">
+                    <div class="numpad-row" style="display:flex; justify-content:center; gap:5px;">
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('1')">1</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('2')">2</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('3')">3</button>
+                    </div>
+                    <div class="numpad-row" style="display:flex; justify-content:center; gap:5px; margin-top:5px;">
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('4')">4</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('5')">5</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('6')">6</button>
+                    </div>
+                    <div class="numpad-row" style="display:flex; justify-content:center; gap:5px; margin-top:5px;">
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('7')">7</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('8')">8</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('9')">9</button>
+                    </div>
+                    <div class="numpad-row" style="display:flex; justify-content:center; gap:5px; margin-top:5px;">
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('del')">⌫</button>
+                        <button class="num-btn" onclick="MathGame.handleSpaceInput('0')">0</button>
+                        <button class="num-btn green" onclick="MathGame.handleSpaceInput('ok')" style="background: #10B981; color: white;">🚀</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. JUNIOR GAME CONTAINER -->
+    <div id="view-junior-game" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-map')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div id="junior-game-area" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+            <!-- Game content injected by JS -->
+        </div>
+    </div>
+
+    <!-- 8. SENIOR GAME (Spelling) -->
+    <div id="view-game-senior" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-map')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="math-game-container">
+            <h2 class="game-subtitle" id="lbl-task-write">Write:</h2>
+            <div class="timer-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+            
+            <div style="font-size: 5rem; margin: 20px 0; animation: bounceIn 1s; cursor: pointer;" id="sen-img" onclick="SeniorGame.speakCurrent()"></div>
+            
+            <div class="slot-container" id="sen-slots"></div>
+            <div class="pool-container" id="sen-pool"></div>
+
+            <div class="difficulty-toggle" style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px;">
+                <input type="checkbox" id="chk-hardmode" onchange="SeniorGame.toggleHardMode()">
+                <label for="chk-hardmode" id="lbl-hard" style="margin-left: 5px; color: #333;">Hard Mode</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. SYLLABLES MENU -->
+    <div id="view-syllable-menu" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-senior-menu')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="submenu-container">
+            <h2 class="section-title" id="lbl-syllable-select">Select Mode</h2>
+            <div class="subject-grid">
+                <button class="subject-btn" style="background: #FF6B6B; color: white;" onclick="app.startSyllableBasic()">
+                    <span class="btn-icon">📖</span>
+                    <span id="lbl-syl-basic">Basic Reading</span>
+                </button>
+                <button class="subject-btn" style="background: #4ECDC4; color: white;" onclick="app.startSyllableAdvanced()">
+                    <span class="btn-icon">🧩</span>
+                    <span id="lbl-syl-advanced">Puzzle Mode</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. SYLLABLES BASIC GAME -->
+    <div id="view-syllable-basic" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-syllable-menu')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="math-game-container" style="text-align: center;">
+            <div id="syllable-emoji" style="font-size: 5rem; margin-bottom: 1rem;"></div>
+            <div id="syllable-tiles" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 2rem; flex-wrap: wrap;"></div>
+            <div id="syllable-word" style="font-size: 2rem; font-weight:bold; color: white; margin-bottom: 1rem;"></div>
+            <p id="syllable-hint" style="color: white; margin-bottom: 2rem;">Click syllable</p>
+            <button class="action-btn" onclick="app.nextSyllableWord()" style="margin: 0 auto;">
+                <span id="lbl-next-word">Next Word</span> ➡️
+            </button>
+        </div>
+    </div>
+
+    <!-- 11. SYLLABLES ADVANCED GAME -->
+    <div id="view-syllable-advanced" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-syllable-menu')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="math-game-container" style="text-align: center;">
+            <div id="advanced-emoji" style="font-size: 5rem; margin-bottom: 1rem;"></div>
+            
+            <!-- Assembly Zone -->
+            <div id="assembly-zone" style="
+                background: rgba(255,255,255,0.2); 
+                border-radius: 15px; 
+                padding: 10px; 
+                min-height: 80px; 
+                display: flex; 
+                justify-content: center; 
+                gap: 10px; 
+                margin-bottom: 2rem;
+                border: 2px dashed rgba(255,255,255,0.4);">
+            </div>
+
+            <!-- Scrambled Tiles -->
+            <div id="scrambled-tiles" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 2rem;"></div>
+
+            <button class="action-btn" onclick="SyllableGame.resetAssembly()" style="background: #FF6B6B; color: white; margin: 0 auto;">
+                <span id="lbl-reset">Reset</span> ↺
+            </button>
+        </div>
+    </div>
+
+    <!-- 12. PHILWORDS MENU -->
+    <div id="view-phil-menu" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-senior-menu')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="submenu-container">
+            <h2 class="section-title">Philwords</h2>
+            <div class="level-path" id="phil-menu-container"></div>
+        </div>
+    </div>
+
+    <!-- 13. PHILWORDS GAME -->
+    <div id="view-game-phil" class="screen center-content hidden">
+        <button class="btn-home" onclick="app.go('view-phil-menu')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="phil-container" style="width: 100%; max-width: 500px; padding: 10px;">
+            <div class="phil-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <div class="phil-letter-big" id="phil-letter-big" style="font-size: 3rem; font-weight: bold; color: var(--secondary);">A</div>
+                <div class="phil-hint" id="lbl-phil-hint" style="font-size: 1.2rem; color: white;">Find words:</div>
+            </div>
+            <div class="phil-targets" id="phil-targets" style="margin-bottom: 10px;"></div>
+            <div class="phil-grid" id="phil-grid"></div>
+        </div>
+    </div>
+
+    <!-- 14. DICTIONARY -->
+    <div id="view-dict" class="screen hidden">
+        <button class="btn-home" onclick="app.go('view-map')" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        </button>
+        <div class="map-container-wrapper">
+            <h2 class="section-title" style="text-align: center; margin-bottom: 20px;">
+                <span id="lbl-dict-title">Dictionary</span>
+            </h2>
+            <div class="dict-list" id="dict-container" style="margin: 0 auto; max-width: 600px;"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS (Order is important) -->
+    <script src="data.js"></script>
+    <script src="core.js"></script>
+    <script src="math.js"></script>
+    <script src="syllables.js"></script>
+    <script src="junior.js"></script>
+    <script src="senior.js"></script>
+    <script src="philwords.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
